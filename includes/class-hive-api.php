@@ -25,9 +25,7 @@ class WP_Dapp_Hive_API {
      * @return array Response data from the Hive API.
      */
     public function post_to_hive( $post_data ) {
-        // Here we assume the Hive PHP library provides a method for posting.
-        // Replace the following pseudocode with the actual function call.
-        // Example pseudocode:
+        // Example pseudocode using the Hive PHP library:
         // $response = HivePHP::post([
         //     'author'      => $this->account,
         //     'private_key' => $this->private_key,
@@ -38,14 +36,42 @@ class WP_Dapp_Hive_API {
         //         'self_vote' => false, // Ensure self-vote is disabled
         //     ],
         // ]);
-
-        // For now, we'll simulate a successful response.
+        //
+        // For now, we simulate a successful response.
         $response = array(
             'status'         => 'success',
-            'transaction_id' => 'abc123',  // This should be replaced by the actual transaction ID.
+            'transaction_id' => 'abc123',  // Replace with the actual transaction ID.
         );
 
         return $response;
     }
-}
 
+    /**
+     * Verify the provided Hive credentials.
+     *
+     * In a real-world scenario, you would perform an API call here to check the credentials.
+     * For demonstration, we use basic validation:
+     *   - Account must be alphanumeric (and may include dashes)
+     *   - Private key must be at least 50 characters
+     *
+     * @param string $account     Hive account name.
+     * @param string $private_key Hive private key.
+     * @return bool True if valid, false otherwise.
+     */
+    public static function verify_credentials( $account, $private_key ) {
+        if ( empty( $account ) || empty( $private_key ) ) {
+            return false;
+        }
+        // Check that the account name contains only allowed characters.
+        if ( ! preg_match( '/^[a-z0-9-]+$/', $account ) ) {
+            return false;
+        }
+        // Check that the private key is at least 50 characters long.
+        if ( strlen( $private_key ) < 50 ) {
+            return false;
+        }
+        // Here, you could also attempt an API call to Hive to fetch account details.
+        // If the call fails, return false.
+        return true;
+    }
+}
