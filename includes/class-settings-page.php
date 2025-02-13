@@ -29,18 +29,19 @@ class WP_Dapp_Settings_Page {
      * Options page callback.
      */
     public function create_admin_page() {
-        // Retrieve existing options from the database
+        // Retrieve existing options from the database.
         $this->options = get_option( 'wpdapp_options' );
         ?>
         <div class="wrap">
             <h2>WP-Dapp Settings</h2>
+            <?php settings_errors( 'wpdapp_options' ); ?>
             <form method="post" action="options.php">
                 <?php
-                // Output security fields for the registered setting "wpdapp_option_group"
+                // Output security fields for the registered setting "wpdapp_option_group".
                 settings_fields( 'wpdapp_option_group' );
-                // Output setting sections and their fields
+                // Output setting sections and their fields.
                 do_settings_sections( 'wp-dapp-admin' );
-                // Submit button
+                // Submit button.
                 submit_button();
                 ?>
             </form>
@@ -53,24 +54,24 @@ class WP_Dapp_Settings_Page {
      */
     public function page_init() {
         register_setting(
-            'wpdapp_option_group', // Option group
-            'wpdapp_options',      // Option name
-            array( $this, 'sanitize' ) // Sanitize callback
+            'wpdapp_option_group', // Option group.
+            'wpdapp_options',      // Option name.
+            array( $this, 'sanitize' ) // Sanitize callback.
         );
 
         add_settings_section(
-            'setting_section_id',  // ID
-            'Hive Credentials',    // Title
-            array( $this, 'print_section_info' ), // Callback
-            'wp-dapp-admin'        // Page
+            'setting_section_id',  // ID.
+            'Hive Credentials',    // Title.
+            array( $this, 'print_section_info' ), // Callback.
+            'wp-dapp-admin'        // Page.
         );
 
         add_settings_field(
-            'hive_account',        // ID
-            'Hive Account',        // Title
-            array( $this, 'hive_account_callback' ), // Callback
-            'wp-dapp-admin',       // Page
-            'setting_section_id'   // Section
+            'hive_account',        // ID.
+            'Hive Account',        // Title.
+            array( $this, 'hive_account_callback' ), // Callback.
+            'wp-dapp-admin',       // Page.
+            'setting_section_id'   // Section.
         );
 
         add_settings_field(
@@ -83,7 +84,7 @@ class WP_Dapp_Settings_Page {
     }
 
     /**
-     * Sanitize each setting field as needed.
+     * Sanitize each setting field as needed and verify credentials.
      *
      * @param array $input Contains all settings fields as array keys.
      * @return array Sanitized settings.
@@ -97,6 +98,18 @@ class WP_Dapp_Settings_Page {
 
         if ( isset( $input['private_key'] ) ) {
             $new_input['private_key'] = sanitize_text_field( $input['private_key'] );
+        }
+
+        // Verify credentials if both fields are provided.
+        if ( ! empty( $new_input['hive_account'] ) && ! empty( $new_input['private_key'] ) ) {
+            if ( ! WP_Dapp_Hive_API::verify_credentials( $new_input['hive_account'], $new_input['private_key'] ) ) {
+                add_settings_error(
+                    'wpdapp_options',
+                    'wpdapp_invalid_credentials',
+                    'Hive credentials are invalid. Please check your account name and private key.',
+                    'error'
+                );
+            }
         }
 
         return $new_input;
