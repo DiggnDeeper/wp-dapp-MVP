@@ -31,19 +31,60 @@ If you need to update or manage dependencies locally:
 2. Run the following command to install dependencies:
    ```bash
    composer install
+    This will create a vendor/ directory with the Hive PHP library and its dependencies.
 
+Configuration
 
-wp-dapp/                           # Root directory for the WP-Dapp plugin
-├── assets/                        # Contains front-end and admin assets
-│   ├── css/
-│   │   └── style.css              # Custom CSS for styling the plugin's admin or front-end pages
-│   └── js/
-│       └── script.js              # Custom JavaScript for any dynamic plugin functionality
-├── includes/                      # Contains all PHP classes and functionality modules
-│   ├── class-hive-api.php         # Wrapper class for interacting with the Hive blockchain using the Hive PHP library
-│   ├── class-publish-handler.php  # Handles WordPress publish events and sends post data to Hive
-│   ├── class-settings-page.php    # Adds an options page in the WordPress admin for storing Hive credentials
-│   └── class-post-meta-box.php    # Adds a meta box to the post editor for entering custom Hive tags (up to 5)
-├── languages/                     # Contains translation files (if needed for localization)
+    Access Settings:
+    After activating the plugin, navigate to Settings > WP-Dapp in your WordPress admin dashboard.
+
+    Enter Hive Credentials:
+        Hive Account: Enter your Hive username.
+        Private Key: Enter your Hive posting key (must be at least 50 characters).
+
+    Save & Verify:
+    Click Save Changes. The plugin will verify your credentials. If there are issues, an error message will display.
+
+Usage
+
+    Create or Edit a Post:
+    Open the post editor to create a new post or edit an existing one.
+
+    Set Custom Hive Tags:
+    In the post editor sidebar, locate the Hive Tags meta box.
+    Enter up to 5 comma-separated tags that will be used when posting to Hive.
+
+    Publish Your Post:
+    Publish or update the post. The plugin will automatically broadcast your content to the Hive blockchain.
+
+    Verify on Hive:
+    Visit Peakd.com or check your Hive account to view the published post.
+
+Troubleshooting
+
+    No Post on Hive:
+    Verify that your Hive credentials are correct and that your posting key is valid. Check your PHP error logs for any broadcast errors.
+
+    Credential Verification Issues:
+    Ensure your Hive account contains only lowercase letters, numbers, or dashes, and that your private key meets the minimum length requirement.
+
+    Dependency Problems:
+    Ensure the vendor/ directory exists and that Composer’s autoloader is included in wp-dapp.php.
+
+Contributing
+
+Contributions are welcome! To contribute:
+
+    Fork the repository.
+    Create a new branch for your feature or bugfix.
+    Submit a pull request with your changes.
+
+For major changes, please open an issue first to discuss what you would like to change.
+License
+
+This plugin is licensed under the MIT License. See the LICENSE file for details.
+Disclaimer
+
+This plugin is provided "as is" without any warranty. Use it at your own risk. The author is not responsible for any issues that arise from the use of this plugin
 ├── README.md                      # Documentation and information about the plugin
 └── wp-dapp.php                    # Main plugin file; initializes the plugin and loads all required files
